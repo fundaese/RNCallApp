@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "886808320048",
+    "firebase_url": "https://callapp-b4110.firebaseio.com",
+    "project_id": "callapp-b4110",
+    "storage_bucket": "callapp-b4110.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886808320048:android:90279ecf9dd61b625435f5",
+        "android_client_info": {
+          "package_name": "com.videocallapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886808320048-up08652op34vc3vqf9ae8svao3mukn2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR3aYuGJhFEK8R5gvGsagd4daPenF5MdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886808320048-up08652op34vc3vqf9ae8svao3mukn2t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
