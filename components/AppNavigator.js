@@ -1,15 +1,15 @@
 import { createStackNavigator } from 'react-navigation-stack';
 
-import ChatPage from './ChatPage';
+import CallPage from './CallPage';
 import LoginPage from './LoginPage';
 
 const AppNavigator = createStackNavigator({
-  ChatPage: { screen: ChatPage },
+  CallPage: { screen: CallPage },
   LoginPage: { screen: LoginPage },
 
 },
 {
-    initialRouteName: "LoginPage"
+    initialRouteName: "CallPage"
 }
 
 );
