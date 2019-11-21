@@ -43,12 +43,12 @@ constructor(props) {
       sdpArr: [],
       localStream: null,
       videoURL: null,
-      remoteStream: null
+      remoteStream: null,
+      isFront: true
     };
 
     this.navigator = this.props.navigator;
   }
-
 
 handleSubmit = () => {
   isCaller = true;
@@ -59,12 +59,12 @@ handleSubmit = () => {
      .then(stream => {
       localStream = stream;
       localStream.getTracks().forEach(() => pc.addStream(localStream));
+      //that.setState({localStream: stream.toURL()});
       //localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
       console.log("negotiation gelmeden");
       pc.onnegotiationneeded = () => {
         console.log("burada ne oldu");
         pc.createOffer({iceRestart: true}).then(desc => {
-          console.log("create offer calisti mi");
           pc.setLocalDescription(desc).then(function (res) {
           socket.emit("sdp", desc.sdp); //socket.emit is responsible for sending messages.
           console.log("offer gönderildi mi?");
@@ -75,16 +75,16 @@ handleSubmit = () => {
     console.log('Requesting local stream');
 }
 
-handleEndCall = () => {
-   console.log('Ending call');
-   pc.getTransceivers().forEach((transceiver) => {
-    transceiver.stop();
-  });
-}
+// handleEndCall = function(stream){
+//    console.log('Ending call');
+//    pc.getTransceivers().forEach((transceiver) => {
+//     transceiver.stop();
+//   });
+// }
 
 componentDidMount() {
   socket = io("http://10.254.19.143:3000");
-  
+
   socket.on('error', (error) => {
       console.log("error: ", JSON.stringify(error));
       // ...
@@ -105,12 +105,13 @@ componentDidMount() {
           }).then(stream => {
             localStream = stream;
             localStream.getTracks().forEach(() => pc.addStream(localStream));
+            that.setState({localStream: stream.toURL()});
           });
            pc.createAnswer().then((desc) => {
              pc.setLocalDescription(desc).then(() => {
-               isCallee = true;
+              isCallee = true;
               socket.emit("answerSdp", desc.sdp); 
-
+              
                }).catch((err) => {
                  console.log("answersdp can not send to remote",JSON.stringify(err));
                });
@@ -125,6 +126,7 @@ componentDidMount() {
  socket.on("answerSdp", answerSdp => { //socket.on is responsible for listening for incoming messages.
      if(!isCallee){
       console.log("answerSDP: ", answerSdp);
+      
       pc.setRemoteDescription({
          sdp: answerSdp,
          type:"answer"
@@ -142,10 +144,12 @@ componentDidMount() {
     if(!event.candidate) return;
     if(isCaller){
       socket.emit('candidateFromCaller',event.candidate);
+      console.log('candidate from caller', event.candidate);
     } else {
       socket.emit('candidateFromCallee',event.candidate);
+      console.log('candidate from callee', event.candidate);
     }
-     console.log('onicecandidate', event.candidate);
+    
   };
 
   socket.on("candidateFromCaller", icecandidate => {
@@ -161,6 +165,7 @@ componentDidMount() {
   }
 
   const that = this;
+
   pc.onaddstream = function (event) {
     console.log('onaddstream---------------', event.stream);
     if(event) {
@@ -168,7 +173,7 @@ componentDidMount() {
     }
    
   }
-
+  
  
 }
 
@@ -187,14 +192,15 @@ render() {
         </Button>
      
        
-        <Button title="End Call" 
+        {/* <Button title="End Call" 
           style = {styles.button}
           onPress= {this.handleEndCall.bind(this)} >
-        </Button> 
+        </Button>  */}
+        
+        
+         { <RTCView streamURL={this.state.remoteStream} style={{ width: 500, height: 200 }}/>}
 
-        {()=> this.state.remoteStream ? <RTCView streamURL={this.state.remoteStream} style={{ width: 250, height: 250,backgroundColor:"red" }}/>:null}
-
-        {sdpArr} 
+         { <RTCView streamURL={this.state.localStream} style={{ width: 500, height: 200}}/>}
 
       </ScrollView>
     );
@@ -219,7 +225,5 @@ const styles = StyleSheet.create({
     padding: 12,
     textAlign:'center',
   },
-
-
 });
 
