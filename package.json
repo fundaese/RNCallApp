@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "lodash": "^4.17.15",
     "open": "^6.4.0",
     "react": "16.9.0",
